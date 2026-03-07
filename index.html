@@ -278,7 +278,7 @@
   <button class="clear-btn" onclick="clearCanvas()">Clear signature</button>
 
   <button class="submit-btn" id="submit-btn" onclick="submitRelease()">Submit</button>
-  <a id="email-btn" class="email-btn" style="display:none">Send release to email →</a>
+  <a id="pdf-btn" class="email-btn" style="display:none" target="_blank">Save signed release as PDF →</a>
 </div>
 
 
@@ -399,39 +399,22 @@ function submitRelease() {
   releases.unshift(record);
   saveReleases(releases);
 
-  // Build mailto link
-  const lines = [
-    'THE HAIR SERIES — PHOTO RELEASE',
-    '================================',
-    '',
-    'Name: ' + name,
-    'Name consent: ' + (nameConsent ? 'Yes' : 'No'),
-    ig    ? 'Instagram: ' + ig    : '',
-    email ? 'Email: '    + email  : '',
-    'Date: ' + now.toLocaleString(),
-    '',
-    'Release text:',
-    'I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.',
-  ].filter(Boolean).join('\n');
+  // Generate PDF and show button for user to tap
+  const doc = makePDF(record);
+  const pdfUri = doc.output('datauristring');
+  const pdfBtn = document.getElementById('pdf-btn');
+  pdfBtn.href = pdfUri;
+  pdfBtn.style.display = 'block';
 
-  const subject = encodeURIComponent('Photo Release — ' + name + ' — ' + now.toLocaleDateString());
-  const body = encodeURIComponent(lines);
-  const mailtoUrl = `mailto:taliacsiegel@gmail.com?subject=${subject}&body=${body}`;
-
-  // Show email button for user to tap
-  const emailBtn = document.getElementById('email-btn');
-  emailBtn.href = mailtoUrl;
-  emailBtn.style.display = 'block';
-
-  // Reset form after delay
+  // Reset form after 30 seconds
   setTimeout(() => {
-    emailBtn.style.display = 'none';
+    pdfBtn.style.display = 'none';
     document.getElementById('name-input').value = '';
     document.getElementById('ig-input').value = '';
     document.getElementById('email-input').value = '';
     document.getElementById('name-consent').checked = false;
     clearCanvas();
-  }, 10000);
+  }, 30000);
 }
 
 // ── PDF EXPORT ──
