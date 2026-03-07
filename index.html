@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Hair Series Release</title>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0f0e0c;
+    --paper: #f5f2ec;
+    --accent: #c8402a;
+    --mid: #8a8479;
+    --line: #d4cfc6;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Arial, sans-serif;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SIGN VIEW ── */
+  #sign-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 18px 20px 12px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .sign-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .logo {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+    margin-bottom: 0;
+  }
+  .logo span { color: var(--accent); }
+
+  .records-icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--mid);
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .records-icon-btn:hover { color: var(--ink); }
+
+  .release-text {
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+
+  .optional-tag {
+    color: var(--mid);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-style: normal;
+  }
+  .required-tag {
+    color: var(--accent);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  label {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #5a5750;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid var(--ink);
+    padding: 5px 0;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    outline: none;
+    margin-bottom: 22px;
+    -webkit-appearance: none;
+  }
+  input[type="text"]::placeholder { color: var(--line); }
+  input[type="text"]:focus { border-bottom-color: var(--accent); }
+
+  .fields-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 0;
+  }
+  .field-half {
+    flex: 1;
+    min-width: 0;
+  }
+  .field-half input[type="text"] {
+    font-size: 15px;
+  }
+
+  .sig-wrap {
+    margin-bottom: 4px;
+  }
+
+  .canvas-container {
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    background: #fff;
+    position: relative;
+    touch-action: none;
+    overflow: hidden;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 110px;
+    cursor: crosshair;
+  }
+
+  .canvas-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #b0aba2;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .clear-btn {
+    background: none;
+    border: none;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    cursor: pointer;
+    padding: 5px 0;
+    margin-bottom: 12px;
+    display: block;
+    text-align: right;
+    width: 100%;
+  }
+  .clear-btn:hover { color: var(--accent); }
+
+  .submit-btn {
+    width: 100%;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+    -webkit-appearance: none;
+  }
+  .submit-btn:hover { background: var(--accent); }
+  .submit-btn:active { transform: scale(0.99); }
+  .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .view-link {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    cursor: pointer;
+  }
+  .view-link:hover { color: var(--ink); }
+
+  /* ── SUCCESS BANNER ── */
+  #success-flash {
+    display: none;
+    background: #2a5c3f;
+    color: #fff;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-top: 12px;
+    text-align: center;
+    opacity: 0;
+  }
+  #success-flash.show {
+    display: block;
+    animation: bannerFade 3s ease forwards;
+  }
+  @keyframes bannerFade {
+    0%   { opacity: 0; }
+    12%  { opacity: 1; }
+    75%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  #name-input {
+    margin-bottom: 14px;
+  }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #5a5750;
+    margin-bottom: 28px;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: normal;
+    font-family: Arial, sans-serif;
+  }
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex-shrink: 0;
+    accent-color: var(--ink);
+    cursor: pointer;
+  }
+
+  /* ── RECORDS VIEW ── */
+  #records-view {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    padding: 28px 24px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .records-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+
+  .back-btn {
+    background: none;
+    border: none;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mid);
+    cursor: pointer;
+    padding: 0;
+  }
+  .back-btn:hover { color: var(--ink); }
+
+  .records-title {
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+  }
+
+  .count-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .export-all-btn {
+    width: 100%;
+    border: 1.5px solid var(--ink);
+    background: transparent;
+    border-radius: 4px;
+    padding: 14px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: all 0.15s;
+  }
+  .export-all-btn:hover { background: var(--ink); color: var(--paper); }
+
+  .records-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .record-card {
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff;
+  }
+
+  .record-sig-thumb {
+    width: 64px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+
+  .record-info { flex: 1; min-width: 0; }
+  .record-name {
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .record-time {
+    font-size: 10px;
+    color: var(--mid);
+    margin-top: 2px;
+    letter-spacing: 0.05em;
+  }
+
+  .record-dl {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--mid);
+    font-size: 20px;
+    padding: 4px;
+    flex-shrink: 0;
+  }
+  .record-dl:hover { color: var(--accent); }
+
+  .record-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--line);
+    font-size: 18px;
+    padding: 4px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  .record-del:hover { color: var(--accent); }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--mid);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+
+  /* PDF hidden render area */
+  #pdf-render {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 600px;
+    padding: 60px;
+    background: #fff;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #0f0e0c;
+  }
+</style>
+</head>
+<body>
+
+<!-- SIGN VIEW -->
+<div id="sign-view">
+  <div class="sign-header">
+    <div class="logo">The Hair Series Release</div>
+    <button class="records-icon-btn" onclick="showRecords()" title="View saved releases">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="release-text">
+    I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.
+  </div>
+
+  <label for="name-input">Full name <span class="required-tag">required</span></label>
+  <input type="text" id="name-input" placeholder="Write your name" autocomplete="off" autocorrect="off" spellcheck="false">
+
+  <label class="checkbox-label">
+    <input type="checkbox" id="name-consent">
+    <span>I consent to the use of my name</span>
+  </label>
+
+  <div class="fields-row">
+    <div class="field-half">
+      <label for="ig-input">Instagram</label>
+      <input type="text" id="ig-input" placeholder="@handle" autocomplete="off" autocorrect="off" spellcheck="false" onfocus="prefillAt()" onblur="clearIfJustAt()" oninput="ensureAt()">
+    </div>
+    <div class="field-half">
+      <label for="email-input">Email</label>
+      <input type="text" id="email-input" placeholder="you@example.com" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+  </div>
+
+  <div class="sig-wrap">
+    <label>Signature <span class="required-tag">required</span></label>
+    <div class="canvas-container">
+      <canvas id="sig-canvas"></canvas>
+      <div class="canvas-hint" id="canvas-hint">Sign here</div>
+    </div>
+  </div>
+  <button class="clear-btn" onclick="clearCanvas()">Clear signature</button>
+
+  <button class="submit-btn" id="submit-btn" onclick="submitRelease()">Submit</button>
+  <div id="success-flash">Release submitted successfully</div>
+</div>
+
+<!-- RECORDS VIEW -->
+<div id="records-view">
+  <div class="records-header">
+    <button class="back-btn" onclick="showSign()">← Back</button>
+    <div class="records-title">Releases</div>
+    <div class="count-badge" id="count-badge">0</div>
+  </div>
+  <button class="export-all-btn" onclick="exportAll()">⬇ Export all as PDF</button>
+  <div class="records-list" id="records-list"></div>
+</div>
+
+<!-- Hidden PDF render area -->
+<div id="pdf-render"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+// ── CANVAS SETUP ──
+const canvas = document.getElementById('sig-canvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let hasSig = false;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = rect.width * dpr;
+  canvas.height = 110 * dpr;
+  ctx.scale(dpr, dpr);
+  ctx.strokeStyle = '#0f0e0c';
+  ctx.lineWidth = 2.2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+}
+
+function startDraw(e) {
+  e.preventDefault();
+  drawing = true;
+  const p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+  document.getElementById('canvas-hint').style.opacity = '0';
+}
+
+function draw(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  hasSig = true;
+  const p = getPos(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+}
+
+function endDraw(e) {
+  drawing = false;
+  ctx.beginPath();
+}
+
+canvas.addEventListener('mousedown', startDraw);
+canvas.addEventListener('mousemove', draw);
+canvas.addEventListener('mouseup', endDraw);
+canvas.addEventListener('touchstart', startDraw, { passive: false });
+canvas.addEventListener('touchmove', draw, { passive: false });
+canvas.addEventListener('touchend', endDraw);
+
+function clearCanvas() {
+  const dpr = window.devicePixelRatio || 1;
+  ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+  hasSig = false;
+  document.getElementById('canvas-hint').style.opacity = '1';
+}
+
+// ── STORAGE (local cache only) ──
+function loadReleases() {
+  try { return JSON.parse(localStorage.getItem('photo_releases') || '[]'); } catch { return []; }
+}
+function saveReleases(list) {
+  try { localStorage.setItem('photo_releases', JSON.stringify(list)); } catch {}
+}
+
+// ── SUBMIT ──
+function submitRelease() {
+  const name = document.getElementById('name-input').value.trim();
+  const ig = document.getElementById('ig-input').value.trim();
+  const email = document.getElementById('email-input').value.trim();
+  const nameConsent = document.getElementById('name-consent').checked;
+
+  if (!name) {
+    const input = document.getElementById('name-input');
+    input.style.borderBottomColor = 'var(--accent)';
+    input.focus();
+    setTimeout(() => input.style.borderBottomColor = '', 1500);
+    return;
+  }
+  if (!hasSig) {
+    const container = document.querySelector('.canvas-container');
+    container.style.borderColor = 'var(--accent)';
+    setTimeout(() => container.style.borderColor = 'var(--ink)', 1500);
+    return;
+  }
+
+  const sigData = canvas.toDataURL('image/png');
+  const now = new Date();
+  const record = {
+    id: Date.now(),
+    name,
+    nameConsent,
+    ig,
+    email,
+    sigData,
+    timestamp: now.toISOString(),
+    displayTime: now.toLocaleString()
+  };
+
+  // Save to local cache
+  const releases = loadReleases();
+  releases.unshift(record);
+  saveReleases(releases);
+
+  // Open PDF in new tab
+  const doc = makePDF(record);
+  const pdfDataUri = doc.output('datauristring');
+  window.open(pdfDataUri, '_blank');
+
+  // Compose email
+  const lines = [
+    'THE HAIR SERIES — PHOTO RELEASE',
+    '================================',
+    '',
+    'Name: ' + name,
+    'Name consent: ' + (nameConsent ? 'Yes' : 'No'),
+    ig    ? 'Instagram: ' + ig    : '',
+    email ? 'Email: '    + email  : '',
+    'Date: ' + now.toLocaleString(),
+    '',
+    'Release text:',
+    'I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.',
+    '',
+    '(Signature on file — see attached PDF opened in browser)'
+  ].filter(l => l !== null).join('\n');
+
+  const subject = encodeURIComponent('Photo Release — ' + name + ' — ' + now.toLocaleDateString());
+  const body = encodeURIComponent(lines);
+  window.location.href = `mailto:taliacsiegel@gmail.com?subject=${subject}&body=${body}`;
+
+  // Banner + reset
+  const flash = document.getElementById('success-flash');
+  flash.classList.add('show');
+  setTimeout(() => {
+    flash.classList.remove('show');
+    document.getElementById('name-input').value = '';
+    document.getElementById('ig-input').value = '';
+    document.getElementById('email-input').value = '';
+    document.getElementById('name-consent').checked = false;
+    clearCanvas();
+  }, 3000);
+}
+
+// ── RECORDS ──
+function showRecords() {
+  document.getElementById('sign-view').style.display = 'none';
+  const rv = document.getElementById('records-view');
+  rv.style.display = 'flex';
+  renderRecords();
+}
+
+function showSign() {
+  document.getElementById('records-view').style.display = 'none';
+  document.getElementById('sign-view').style.display = 'flex';
+}
+
+function renderRecords() {
+  const releases = loadReleases();
+  document.getElementById('count-badge').textContent = releases.length;
+  const list = document.getElementById('records-list');
+
+  if (releases.length === 0) {
+    list.innerHTML = '<div class="empty-state">No releases yet</div>';
+    return;
+  }
+
+  list.innerHTML = releases.map(r => `
+    <div class="record-card">
+      <img class="record-sig-thumb" src="${r.sigData}" alt="sig">
+      <div class="record-info">
+        <div class="record-name">${escHtml(r.name)}</div>
+        <div class="record-time">${r.ig ? escHtml(r.ig) + ' · ' : ''}${r.email ? escHtml(r.email) + ' · ' : ''}${r.displayTime}</div>
+      </div>
+      <button class="record-dl" onclick="exportSingle(${r.id})" title="Download PDF">⬇</button>
+      <button class="record-del" onclick="deleteRelease(${r.id})" title="Delete">✕</button>
+    </div>
+  `).join('');
+}
+
+function deleteRelease(id) {
+  if (!confirm('Delete this release?')) return;
+  const releases = loadReleases().filter(r => r.id !== id);
+  saveReleases(releases);
+  renderRecords();
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── PDF EXPORT ──
+const releaseText = `I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.`;
+
+function makePDF(record) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  const margin = 60;
+  const contentW = W - margin * 2;
+
+  // Background
+  doc.setFillColor(245, 242, 236);
+  doc.rect(0, 0, W, doc.internal.pageSize.getHeight(), 'F');
+
+  // Title
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(26);
+  doc.setTextColor(15, 14, 12);
+  doc.text("The Hair Series Release", margin, 80);
+
+  // Date
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(138, 132, 121);
+  doc.text(record.displayTime.toUpperCase(), margin, 100);
+
+  // Divider
+  doc.setDrawColor(212, 207, 198);
+  doc.setLineWidth(0.75);
+  doc.line(margin, 112, W - margin, 112);
+
+  // Release text
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(60, 58, 54);
+  const lines = doc.splitTextToSize(releaseText, contentW);
+  doc.text(lines, margin, 134);
+
+  // Name section
+  const nameY = 134 + lines.length * 14 + 30;
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(138, 132, 121);
+  doc.text('FULL NAME', margin, nameY);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(15, 14, 12);
+  doc.text(record.name, margin, nameY + 20);
+  doc.setDrawColor(15, 14, 12);
+  doc.setLineWidth(1);
+  doc.line(margin, nameY + 26, W - margin, nameY + 26);
+
+  // IG + Email row
+  let extraY = nameY + 46;
+  const halfW = (contentW - 16) / 2;
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(138, 132, 121);
+  doc.text('INSTAGRAM', margin, extraY);
+  doc.text('EMAIL', margin + halfW + 16, extraY);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(11);
+  doc.setTextColor(15, 14, 12);
+  doc.text(record.ig || '—', margin, extraY + 16);
+  doc.text(record.email || '—', margin + halfW + 16, extraY + 16);
+  doc.setDrawColor(15, 14, 12);
+  doc.setLineWidth(0.75);
+  doc.line(margin, extraY + 22, margin + halfW, extraY + 22);
+  doc.line(margin + halfW + 16, extraY + 22, W - margin, extraY + 22);
+
+  // Signature
+  const sigY = extraY + 42;
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(138, 132, 121);
+  doc.text('SIGNATURE', margin, sigY);
+
+  // Sig image box
+  doc.setFillColor(255, 255, 255);
+  doc.setDrawColor(212, 207, 198);
+  doc.setLineWidth(0.75);
+  doc.roundedRect(margin, sigY + 8, contentW, 90, 3, 3, 'FD');
+  doc.addImage(record.sigData, 'PNG', margin + 10, sigY + 12, contentW - 20, 82);
+
+  // Footer
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFont('courier', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(138, 132, 121);
+  doc.text("The Hair Series Release · Signed digitally", margin, pageH - 40);
+  doc.text(`ID: ${record.id}`, W - margin, pageH - 40, { align: 'right' });
+
+  return doc;
+}
+
+function prefillAt() {
+  const el = document.getElementById('ig-input');
+  if (!el.value) el.value = '@';
+}
+function clearIfJustAt() {
+  const el = document.getElementById('ig-input');
+  if (el.value === '@') el.value = '';
+}
+function ensureAt() {
+  const el = document.getElementById('ig-input');
+  if (el.value && !el.value.startsWith('@')) el.value = '@' + el.value;
+  if (el.value === '@') el.value = '@';
+}
+
+function exportSingle(id) {
+  const releases = loadReleases();
+  const record = releases.find(r => r.id === id);
+  if (!record) return;
+  const doc = makePDF(record);
+  const dataUrl = doc.output('datauristring');
+  window.open(dataUrl, '_blank');
+}
+
+function exportAll() {
+  const releases = loadReleases();
+  if (releases.length === 0) return;
+  releases.forEach((r, i) => {
+    setTimeout(() => {
+      const doc = makePDF(r);
+      const dataUrl = doc.output('datauristring');
+      window.open(dataUrl, '_blank');
+    }, i * 600);
+  });
+}
+</script>
+</body>
+</html>
