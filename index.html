@@ -380,12 +380,12 @@
 </div>
 
 <!-- RECEIPT VIEW -->
-<div id="receipt-view" style="display:none">
+<div id="receipt-view" style="display:none;position:relative">
+  <button onclick="resetForm()" style="position:fixed;top:20px;right:20px;background:none;border:none;padding:6px;cursor:pointer;line-height:1;color:#5a5750;font-size:22px;z-index:999;" aria-label="Close">&#x2715;</button>
   <div id="receipt-content">
-    <div class="receipt-header" style="position:relative">
+    <div class="receipt-header">
       <div class="receipt-title">The Hair Series Release</div>
       <div class="receipt-date" id="receipt-date"></div>
-      <button onclick="resetForm()" style="position:absolute;top:0;right:0;background:none;border:none;padding:4px;cursor:pointer;line-height:1;color:#5a5750;font-size:20px;" aria-label="Close">&#x2715;</button>
     </div>
     <div class="receipt-text">I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.</div>
     <div class="receipt-field"><span class="receipt-label">Full name</span><span id="receipt-name"></span></div>
