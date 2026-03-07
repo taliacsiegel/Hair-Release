@@ -52,18 +52,6 @@
   }
   .logo span { color: var(--accent); }
 
-  .records-icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--mid);
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .records-icon-btn:hover { color: var(--ink); }
-
   .release-text {
     font-size: 16px;
     line-height: 1.5;
@@ -190,40 +178,25 @@
   .submit-btn:active { transform: scale(0.99); }
   .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .view-link {
-    text-align: center;
+  .email-btn {
+    display: block;
+    width: 100%;
     margin-top: 12px;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--mid);
-    cursor: pointer;
-  }
-  .view-link:hover { color: var(--ink); }
-
-  /* ── SUCCESS BANNER ── */
-  #success-flash {
-    display: none;
+    padding: 14px;
     background: #2a5c3f;
     color: #fff;
-    font-size: 14px;
-    letter-spacing: 0.04em;
-    padding: 12px 20px;
-    border-radius: 8px;
-    margin-top: 12px;
+    border: none;
+    border-radius: 4px;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.08em;
     text-align: center;
-    opacity: 0;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-appearance: none;
   }
-  #success-flash.show {
-    display: block;
-    animation: bannerFade 3s ease forwards;
-  }
-  @keyframes bannerFade {
-    0%   { opacity: 0; }
-    12%  { opacity: 1; }
-    75%  { opacity: 1; }
-    100% { opacity: 0; }
-  }
+  .email-btn:hover { background: #1e4530; }
+
 
   #name-input {
     margin-bottom: 14px;
@@ -249,140 +222,6 @@
     cursor: pointer;
   }
 
-  /* ── RECORDS VIEW ── */
-  #records-view {
-    display: none;
-    flex-direction: column;
-    flex: 1;
-    padding: 28px 24px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .records-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-
-  .back-btn {
-    background: none;
-    border: none;
-    font-family: Arial, sans-serif;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--mid);
-    cursor: pointer;
-    padding: 0;
-  }
-  .back-btn:hover { color: var(--ink); }
-
-  .records-title {
-    font-family: Arial, sans-serif;
-    font-size: 20px;
-  }
-
-  .count-badge {
-    background: var(--accent);
-    color: #fff;
-    font-size: 10px;
-    padding: 3px 8px;
-    border-radius: 20px;
-    letter-spacing: 0.05em;
-  }
-
-  .export-all-btn {
-    width: 100%;
-    border: 1.5px solid var(--ink);
-    background: transparent;
-    border-radius: 4px;
-    padding: 14px;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: all 0.15s;
-  }
-  .export-all-btn:hover { background: var(--ink); color: var(--paper); }
-
-  .records-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow-y: auto;
-    flex: 1;
-  }
-
-  .record-card {
-    border: 1.5px solid var(--line);
-    border-radius: 6px;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #fff;
-  }
-
-  .record-sig-thumb {
-    width: 64px;
-    height: 36px;
-    border: 1px solid var(--line);
-    border-radius: 3px;
-    flex-shrink: 0;
-    background: #fff;
-  }
-
-  .record-info { flex: 1; min-width: 0; }
-  .record-name {
-    font-family: Arial, sans-serif;
-    font-size: 17px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .record-time {
-    font-size: 10px;
-    color: var(--mid);
-    margin-top: 2px;
-    letter-spacing: 0.05em;
-  }
-
-  .record-dl {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--mid);
-    font-size: 20px;
-    padding: 4px;
-    flex-shrink: 0;
-  }
-  .record-dl:hover { color: var(--accent); }
-
-  .record-del {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--line);
-    font-size: 18px;
-    padding: 4px;
-    flex-shrink: 0;
-    line-height: 1;
-  }
-  .record-del:hover { color: var(--accent); }
-
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--mid);
-    font-size: 12px;
-    letter-spacing: 0.08em;
-  }
-
   /* PDF hidden render area */
   #pdf-render {
     position: fixed;
@@ -404,15 +243,6 @@
 <div id="sign-view">
   <div class="sign-header">
     <div class="logo">The Hair Series Release</div>
-    <button class="records-icon-btn" onclick="showRecords()" title="View saved releases">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-        <polyline points="14 2 14 8 20 8"/>
-        <line x1="16" y1="13" x2="8" y2="13"/>
-        <line x1="16" y1="17" x2="8" y2="17"/>
-        <polyline points="10 9 9 9 8 9"/>
-      </svg>
-    </button>
   </div>
 
   <div class="release-text">
@@ -448,19 +278,9 @@
   <button class="clear-btn" onclick="clearCanvas()">Clear signature</button>
 
   <button class="submit-btn" id="submit-btn" onclick="submitRelease()">Submit</button>
-  <div id="success-flash">Release submitted successfully</div>
+  <a id="email-btn" class="email-btn" style="display:none">Send release to email →</a>
 </div>
 
-<!-- RECORDS VIEW -->
-<div id="records-view">
-  <div class="records-header">
-    <button class="back-btn" onclick="showSign()">← Back</button>
-    <div class="records-title">Releases</div>
-    <div class="count-badge" id="count-badge">0</div>
-  </div>
-  <button class="export-all-btn" onclick="exportAll()">⬇ Export all as PDF</button>
-  <div class="records-list" id="records-list"></div>
-</div>
 
 <!-- Hidden PDF render area -->
 <div id="pdf-render"></div>
@@ -579,12 +399,7 @@ function submitRelease() {
   releases.unshift(record);
   saveReleases(releases);
 
-  // Open PDF in new tab
-  const doc = makePDF(record);
-  const pdfDataUri = doc.output('datauristring');
-  window.open(pdfDataUri, '_blank');
-
-  // Compose email
+  // Build mailto link
   const lines = [
     'THE HAIR SERIES — PHOTO RELEASE',
     '================================',
@@ -597,72 +412,26 @@ function submitRelease() {
     '',
     'Release text:',
     'I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.',
-    '',
-    '(Signature on file — see attached PDF opened in browser)'
-  ].filter(l => l !== null).join('\n');
+  ].filter(Boolean).join('\n');
 
   const subject = encodeURIComponent('Photo Release — ' + name + ' — ' + now.toLocaleDateString());
   const body = encodeURIComponent(lines);
-  window.location.href = `mailto:taliacsiegel@gmail.com?subject=${subject}&body=${body}`;
+  const mailtoUrl = `mailto:taliacsiegel@gmail.com?subject=${subject}&body=${body}`;
 
-  // Banner + reset
-  const flash = document.getElementById('success-flash');
-  flash.classList.add('show');
+  // Show email button for user to tap
+  const emailBtn = document.getElementById('email-btn');
+  emailBtn.href = mailtoUrl;
+  emailBtn.style.display = 'block';
+
+  // Reset form after delay
   setTimeout(() => {
-    flash.classList.remove('show');
+    emailBtn.style.display = 'none';
     document.getElementById('name-input').value = '';
     document.getElementById('ig-input').value = '';
     document.getElementById('email-input').value = '';
     document.getElementById('name-consent').checked = false;
     clearCanvas();
-  }, 3000);
-}
-
-// ── RECORDS ──
-function showRecords() {
-  document.getElementById('sign-view').style.display = 'none';
-  const rv = document.getElementById('records-view');
-  rv.style.display = 'flex';
-  renderRecords();
-}
-
-function showSign() {
-  document.getElementById('records-view').style.display = 'none';
-  document.getElementById('sign-view').style.display = 'flex';
-}
-
-function renderRecords() {
-  const releases = loadReleases();
-  document.getElementById('count-badge').textContent = releases.length;
-  const list = document.getElementById('records-list');
-
-  if (releases.length === 0) {
-    list.innerHTML = '<div class="empty-state">No releases yet</div>';
-    return;
-  }
-
-  list.innerHTML = releases.map(r => `
-    <div class="record-card">
-      <img class="record-sig-thumb" src="${r.sigData}" alt="sig">
-      <div class="record-info">
-        <div class="record-name">${escHtml(r.name)}</div>
-        <div class="record-time">${r.ig ? escHtml(r.ig) + ' · ' : ''}${r.email ? escHtml(r.email) + ' · ' : ''}${r.displayTime}</div>
-      </div>
-      <button class="record-dl" onclick="exportSingle(${r.id})" title="Download PDF">⬇</button>
-      <button class="record-del" onclick="deleteRelease(${r.id})" title="Delete">✕</button>
-    </div>
-  `).join('');
-}
-
-function deleteRelease(id) {
-  if (!confirm('Delete this release?')) return;
-  const releases = loadReleases().filter(r => r.id !== id);
-  saveReleases(releases);
-  renderRecords();
-}
-
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }, 10000);
 }
 
 // ── PDF EXPORT ──
@@ -772,27 +541,6 @@ function ensureAt() {
   const el = document.getElementById('ig-input');
   if (el.value && !el.value.startsWith('@')) el.value = '@' + el.value;
   if (el.value === '@') el.value = '@';
-}
-
-function exportSingle(id) {
-  const releases = loadReleases();
-  const record = releases.find(r => r.id === id);
-  if (!record) return;
-  const doc = makePDF(record);
-  const dataUrl = doc.output('datauristring');
-  window.open(dataUrl, '_blank');
-}
-
-function exportAll() {
-  const releases = loadReleases();
-  if (releases.length === 0) return;
-  releases.forEach((r, i) => {
-    setTimeout(() => {
-      const doc = makePDF(r);
-      const dataUrl = doc.output('datauristring');
-      window.open(dataUrl, '_blank');
-    }, i * 600);
-  });
 }
 </script>
 </body>
