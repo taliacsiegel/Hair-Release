@@ -367,6 +367,9 @@
     </div>
   </div>
 
+  <label for="hairstyle-input">Type of hairstyle</label>
+  <input type="text" id="hairstyle-input" placeholder="e.g. box braids, locs, afro..." autocomplete="off" autocorrect="off" spellcheck="false" style="margin-bottom:20px;">
+
   <div class="sig-wrap">
     <label>Signature <span class="required-tag">required</span></label>
     <div class="canvas-container">
@@ -389,6 +392,7 @@
     <div class="receipt-text">I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.</div>
     <div class="receipt-field"><span class="receipt-label">Full name</span><span id="receipt-name"></span></div>
     <div class="receipt-field" id="receipt-consent-row"><span class="receipt-label">Name consent</span><span id="receipt-consent"></span></div>
+    <div class="receipt-field" id="receipt-hairstyle-row"><span class="receipt-label">Hairstyle</span><span id="receipt-hairstyle"></span></div>
     <div class="receipt-field" id="receipt-ig-row"><span class="receipt-label">Instagram</span><span id="receipt-ig"></span></div>
     <div class="receipt-field" id="receipt-email-row"><span class="receipt-label">Email</span><span id="receipt-email"></span></div>
     <div class="receipt-sig-label">Signature</div>
@@ -477,6 +481,7 @@ function saveReleases(list) {
 function submitRelease() {
   const name = document.getElementById('name-input').value.trim();
   const ig = document.getElementById('ig-input').value.trim();
+  const hairstyle = document.getElementById('hairstyle-input').value.trim();
   const email = document.getElementById('email-input').value.trim();
   const nameConsent = document.getElementById('name-consent').checked;
 
@@ -519,6 +524,8 @@ function submitRelease() {
   document.getElementById('receipt-consent').textContent = nameConsent ? 'Yes' : 'No';
   const igRow = document.getElementById('receipt-ig-row');
   const emailRow = document.getElementById('receipt-email-row');
+  const hairstyleRow = document.getElementById('receipt-hairstyle-row');
+  if (hairstyle) { document.getElementById('receipt-hairstyle').textContent = hairstyle; hairstyleRow.style.display = 'flex'; } else { hairstyleRow.style.display = 'none'; }
   if (ig) { document.getElementById('receipt-ig').textContent = ig; igRow.style.display = 'flex'; } else { igRow.style.display = 'none'; }
   if (email) { document.getElementById('receipt-email').textContent = email; emailRow.style.display = 'flex'; } else { emailRow.style.display = 'none'; }
   document.getElementById('receipt-sig').src = sigData;
@@ -529,6 +536,7 @@ function submitRelease() {
 function resetForm() {
   document.getElementById('receipt-view').style.display = 'none';
   document.getElementById('sign-view').style.display = 'flex';
+  document.getElementById('hairstyle-input').value = '';
   document.getElementById('name-input').value = '';
   document.getElementById('ig-input').value = '';
   document.getElementById('email-input').value = '';
