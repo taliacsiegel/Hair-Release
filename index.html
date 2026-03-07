@@ -326,6 +326,14 @@
     color: var(--mid);
     margin-bottom: 4px;
   }
+
+  @media print {
+    body { background: white; }
+    #sign-view { display: none !important; }
+    #receipt-view { display: block !important; padding: 0; }
+    .submit-btn, .receipt-hint { display: none !important; }
+    #receipt-content { box-shadow: none; border: none; padding: 0; }
+  }
 </style>
 </head>
 <body>
@@ -386,8 +394,11 @@
     <div class="receipt-sig-label">Signature</div>
     <div class="receipt-sig-box"><img id="receipt-sig" src="" alt="signature"></div>
   </div>
-  <p class="receipt-hint">📸 Screenshot this page to save the release</p>
-  <button class="submit-btn" onclick="resetForm()" style="margin-top:12px">Done — next release</button>
+  <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+    <button class="submit-btn" onclick="printReceipt()" style="flex:1;background:#c8402a">Save as PDF</button>
+    <button class="submit-btn" onclick="resetForm()" style="flex:1">Done — next release</button>
+  </div>
+  <p class="receipt-hint" style="margin-top:10px">Tap "Save as PDF" → tap the share icon → Save to Files</p>
 </div>
 
 <script>
@@ -540,6 +551,10 @@ function ensureAt() {
   const el = document.getElementById('ig-input');
   if (el.value && !el.value.startsWith('@')) el.value = '@' + el.value;
   if (el.value === '@') el.value = '@';
+}
+
+function printReceipt() {
+  window.print();
 }
 </script>
 </body>
