@@ -235,6 +235,97 @@
     line-height: 1.8;
     color: #0f0e0c;
   }
+  /* ── RECEIPT VIEW ── */
+  #receipt-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px 20px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  #receipt-content {
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+
+  .receipt-header {
+    border-bottom: 1.5px solid var(--line);
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+  }
+
+  .receipt-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--ink);
+  }
+
+  .receipt-date {
+    font-size: 12px;
+    color: var(--mid);
+    margin-top: 4px;
+  }
+
+  .receipt-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #3a3830;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .receipt-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+
+  .receipt-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  .receipt-sig-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mid);
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .receipt-sig-box {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--paper);
+    padding: 8px;
+  }
+
+  .receipt-sig-box img {
+    width: 100%;
+    display: block;
+  }
+
+  .receipt-hint {
+    text-align: center;
+    font-size: 13px;
+    color: var(--mid);
+    margin-bottom: 4px;
+  }
 </style>
 </head>
 <body>
@@ -278,14 +369,27 @@
   <button class="clear-btn" onclick="clearCanvas()">Clear signature</button>
 
   <button class="submit-btn" id="submit-btn" onclick="submitRelease()">Submit</button>
-  <a id="pdf-btn" class="email-btn" style="display:none" target="_blank">Save signed release as PDF →</a>
 </div>
 
+<!-- RECEIPT VIEW -->
+<div id="receipt-view" style="display:none">
+  <div id="receipt-content">
+    <div class="receipt-header">
+      <div class="receipt-title">The Hair Series Release</div>
+      <div class="receipt-date" id="receipt-date"></div>
+    </div>
+    <div class="receipt-text">I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.</div>
+    <div class="receipt-field"><span class="receipt-label">Full name</span><span id="receipt-name"></span></div>
+    <div class="receipt-field" id="receipt-consent-row"><span class="receipt-label">Name consent</span><span id="receipt-consent"></span></div>
+    <div class="receipt-field" id="receipt-ig-row"><span class="receipt-label">Instagram</span><span id="receipt-ig"></span></div>
+    <div class="receipt-field" id="receipt-email-row"><span class="receipt-label">Email</span><span id="receipt-email"></span></div>
+    <div class="receipt-sig-label">Signature</div>
+    <div class="receipt-sig-box"><img id="receipt-sig" src="" alt="signature"></div>
+  </div>
+  <p class="receipt-hint">📸 Screenshot this page to save the release</p>
+  <button class="submit-btn" onclick="resetForm()" style="margin-top:12px">Done — next release</button>
+</div>
 
-<!-- Hidden PDF render area -->
-<div id="pdf-render"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 // ── CANVAS SETUP ──
 const canvas = document.getElementById('sig-canvas');
@@ -399,118 +503,30 @@ function submitRelease() {
   releases.unshift(record);
   saveReleases(releases);
 
-  // Generate PDF and show button for user to tap
-  const doc = makePDF(record);
-  const pdfUri = doc.output('datauristring');
-  const pdfBtn = document.getElementById('pdf-btn');
-  pdfBtn.href = pdfUri;
-  pdfBtn.style.display = 'block';
-
-  // Reset form after 30 seconds
-  setTimeout(() => {
-    pdfBtn.style.display = 'none';
-    document.getElementById('name-input').value = '';
-    document.getElementById('ig-input').value = '';
-    document.getElementById('email-input').value = '';
-    document.getElementById('name-consent').checked = false;
-    clearCanvas();
-  }, 30000);
+  // Show receipt
+  document.getElementById('sign-view').style.display = 'none';
+  document.getElementById('receipt-date').textContent = now.toLocaleString();
+  document.getElementById('receipt-name').textContent = name;
+  document.getElementById('receipt-consent').textContent = nameConsent ? 'Yes' : 'No';
+  const igRow = document.getElementById('receipt-ig-row');
+  const emailRow = document.getElementById('receipt-email-row');
+  if (ig) { document.getElementById('receipt-ig').textContent = ig; igRow.style.display = 'flex'; } else { igRow.style.display = 'none'; }
+  if (email) { document.getElementById('receipt-email').textContent = email; emailRow.style.display = 'flex'; } else { emailRow.style.display = 'none'; }
+  document.getElementById('receipt-sig').src = sigData;
+  document.getElementById('receipt-view').style.display = 'flex';
+  window.scrollTo(0, 0);
 }
 
-// ── PDF EXPORT ──
-const releaseText = `I consent to and authorize Talia Siegel to photograph me, and to use such photograph(s) for publication on social media or for any other purpose, without any further compensation to me. If added below, I also consent to the use of my name to identify me as the subject of the photograph(s). I agree that this is an irrevocable release.`;
-
-function makePDF(record) {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
-  const W = doc.internal.pageSize.getWidth();
-  const margin = 60;
-  const contentW = W - margin * 2;
-
-  // Background
-  doc.setFillColor(245, 242, 236);
-  doc.rect(0, 0, W, doc.internal.pageSize.getHeight(), 'F');
-
-  // Title
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(26);
-  doc.setTextColor(15, 14, 12);
-  doc.text("The Hair Series Release", margin, 80);
-
-  // Date
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(9);
-  doc.setTextColor(138, 132, 121);
-  doc.text(record.displayTime.toUpperCase(), margin, 100);
-
-  // Divider
-  doc.setDrawColor(212, 207, 198);
-  doc.setLineWidth(0.75);
-  doc.line(margin, 112, W - margin, 112);
-
-  // Release text
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(10);
-  doc.setTextColor(60, 58, 54);
-  const lines = doc.splitTextToSize(releaseText, contentW);
-  doc.text(lines, margin, 134);
-
-  // Name section
-  const nameY = 134 + lines.length * 14 + 30;
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(138, 132, 121);
-  doc.text('FULL NAME', margin, nameY);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(16);
-  doc.setTextColor(15, 14, 12);
-  doc.text(record.name, margin, nameY + 20);
-  doc.setDrawColor(15, 14, 12);
-  doc.setLineWidth(1);
-  doc.line(margin, nameY + 26, W - margin, nameY + 26);
-
-  // IG + Email row
-  let extraY = nameY + 46;
-  const halfW = (contentW - 16) / 2;
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(138, 132, 121);
-  doc.text('INSTAGRAM', margin, extraY);
-  doc.text('EMAIL', margin + halfW + 16, extraY);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(11);
-  doc.setTextColor(15, 14, 12);
-  doc.text(record.ig || '—', margin, extraY + 16);
-  doc.text(record.email || '—', margin + halfW + 16, extraY + 16);
-  doc.setDrawColor(15, 14, 12);
-  doc.setLineWidth(0.75);
-  doc.line(margin, extraY + 22, margin + halfW, extraY + 22);
-  doc.line(margin + halfW + 16, extraY + 22, W - margin, extraY + 22);
-
-  // Signature
-  const sigY = extraY + 42;
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(138, 132, 121);
-  doc.text('SIGNATURE', margin, sigY);
-
-  // Sig image box
-  doc.setFillColor(255, 255, 255);
-  doc.setDrawColor(212, 207, 198);
-  doc.setLineWidth(0.75);
-  doc.roundedRect(margin, sigY + 8, contentW, 90, 3, 3, 'FD');
-  doc.addImage(record.sigData, 'PNG', margin + 10, sigY + 12, contentW - 20, 82);
-
-  // Footer
-  const pageH = doc.internal.pageSize.getHeight();
-  doc.setFont('courier', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(138, 132, 121);
-  doc.text("The Hair Series Release · Signed digitally", margin, pageH - 40);
-  doc.text(`ID: ${record.id}`, W - margin, pageH - 40, { align: 'right' });
-
-  return doc;
+function resetForm() {
+  document.getElementById('receipt-view').style.display = 'none';
+  document.getElementById('sign-view').style.display = 'flex';
+  document.getElementById('name-input').value = '';
+  document.getElementById('ig-input').value = '';
+  document.getElementById('email-input').value = '';
+  document.getElementById('name-consent').checked = false;
+  clearCanvas();
 }
+
 
 function prefillAt() {
   const el = document.getElementById('ig-input');
