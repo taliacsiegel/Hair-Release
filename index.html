@@ -380,7 +380,6 @@
 </div>
 
 <!-- RECEIPT VIEW -->
-<button id="receipt-close-btn" onclick="resetForm()" style="display:none;position:fixed;top:20px;right:20px;background:none;border:none;padding:6px;cursor:pointer;line-height:1;color:#5a5750;font-size:22px;z-index:999;" aria-label="Close">&#x2715;</button>
 <div id="receipt-view" style="display:none">
   <div id="receipt-content">
     <div class="receipt-header">
@@ -397,6 +396,7 @@
   </div>
   <button onclick="printReceipt()" style="margin-top:12px;width:100%;background:#1a1916;color:#fff;border:none;border-radius:4px;padding:14px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;">Save as PDF</button>
   <p class="receipt-hint" style="margin-top:10px">Tap "Save as PDF" → tap the share icon → Save to Files</p>
+  <button onclick="resetForm()" style="margin-top:10px;width:100%;background:transparent;color:#1a1916;border:1.5px solid #1a1916;border-radius:4px;padding:14px;font-family:Arial,sans-serif;font-size:13px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;-webkit-appearance:none;">Close</button>
 </div>
 
 <script>
@@ -523,13 +523,11 @@ function submitRelease() {
   if (email) { document.getElementById('receipt-email').textContent = email; emailRow.style.display = 'flex'; } else { emailRow.style.display = 'none'; }
   document.getElementById('receipt-sig').src = sigData;
   document.getElementById('receipt-view').style.display = 'flex';
-  document.getElementById('receipt-close-btn').style.display = 'block';
   window.scrollTo(0, 0);
 }
 
 function resetForm() {
   document.getElementById('receipt-view').style.display = 'none';
-  document.getElementById('receipt-close-btn').style.display = 'none';
   document.getElementById('sign-view').style.display = 'flex';
   document.getElementById('name-input').value = '';
   document.getElementById('ig-input').value = '';
