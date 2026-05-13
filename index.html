@@ -562,6 +562,7 @@ function getPos(e) {
 }
 
 function startDraw(e) {
+  if (hasSig) return;
   e.preventDefault();
   drawing = true;
   const p = getPos(e);
@@ -571,9 +572,8 @@ function startDraw(e) {
 }
 
 function draw(e) {
-  if (!drawing) return;
+  if (!drawing || hasSig) return;
   e.preventDefault();
-  hasSig = true;
   const p = getPos(e);
   ctx.lineTo(p.x, p.y);
   ctx.stroke();
@@ -582,6 +582,7 @@ function draw(e) {
 }
 
 function endDraw(e) {
+  if (drawing) hasSig = true;
   drawing = false;
   ctx.beginPath();
 }
